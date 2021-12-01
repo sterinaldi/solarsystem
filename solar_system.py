@@ -1,11 +1,11 @@
 import numpy as np
 
 from optparse import OptionParser
+from pathlib import Path
 
 from datetime import datetime
 from astropy.time import Time
 from astropy.coordinates import get_body_barycentric_posvel
-from astropy.constants import M_earth, M_sun, au, M_jup
 
 from kepler_nbodies import run
 
@@ -15,7 +15,7 @@ from mpl_toolkits import mplot3d
 from matplotlib import rcParams
 from distutils.spawn import find_executable
 
-from constants import G, Msun, AU, day
+from constants import G, Msun, AU, day, masses
 
 if find_executable('latex'):
     rcParams["text.usetex"] = True
@@ -28,7 +28,7 @@ rcParams["axes.labelsize"]=16
 rcParams["axes.grid"] = True
 rcParams["grid.alpha"] = 0.6
 
-def plot_solutions(solutions, planet_names):
+def plot_solutions(solutions, planet_names, folder):
     colors = iter(cm.rainbow(np.linspace(0, 1, len(planet_names))))
     f = plt.figure(figsize=(6,4))
     ax = f.add_subplot(111, projection = '3d')
@@ -40,9 +40,9 @@ def plot_solutions(solutions, planet_names):
     
     ax.legend(loc=0,fontsize=10, bbox_to_anchor=(1.5, 1))
 
-    f.savefig('./plot_solar_system.pdf', bbox_inches = 'tight')
+    f.savefig(Path(folder, 'plot_solar_system.pdf'), bbox_inches = 'tight')
     
-def plot_hamiltonian(t, H, V, T):
+def plot_hamiltonian(t, H, V, T, folder):
 
     fig, (ax, e) = plt.subplots(2,1, sharex = True)
     fig.subplots_adjust(hspace=.0)
@@ -61,9 +61,9 @@ def plot_hamiltonian(t, H, V, T):
     e.grid(True,dashes=(1,3))
     e.legend(loc=0,frameon=False,fontsize=10)
     
-    fig.savefig('./H_solar_system.pdf', bbox_inches = 'tight')
+    fig.savefig(Path(folder, 'H_solar_system.pdf'), bbox_inches = 'tight')
 
-def plot_angular_momentum(t, L):
+def plot_angular_momentum(t, L, folder):
     
     fig, ax = plt.subplots()
     
@@ -73,10 +73,11 @@ def plot_angular_momentum(t, L):
     ax.set_xlabel('$t\ [yr]$')
     ax.grid(True,dashes=(1,3))
     
-    fig.savefig('./L_solar_system.pdf', bbox_inches = 'tight')
+    fig.savefig(Path(folder, 'L_solar_system.pdf'), bbox_inches = 'tight')
 
 if __name__ == '__main__':
     parser = OptionParser()
+    parser.add_option('-o', '--output', dest = "outfolder", default = './', help = "Output folder")
     parser.add_option('--years', default = 1, type = 'float', help = "Number of years")
     parser.add_option('--cm', default = False, action = 'store_true', help = "Set center of mass velocity to 0")
     parser.add_option('--cn_order', default = 7, type = 'int', help = "Crank-Nicolson integrator order")
@@ -85,13 +86,16 @@ if __name__ == '__main__':
     parser.add_option('--geo', dest = "geocentric", default = False, action = 'store_true', help = "Make plots in geocentric reference frame")
 
     (opts,args) = parser.parse_args()
+    out_folder  = Path(opts.outfolder).absolute()
+    if not out_folder.exists():
+        out_folder.mkdir()
 
-    t = Time(datetime.now())#'2021-06-21T00:00:00')
+    t = Time(datetime.now())
 
-    m = np.array([1*Msun, (M_earth/M_sun).value*Msun, (M_jup/M_sun).value*Msun, (0.055*M_earth/M_sun).value*Msun, (0.107*M_earth/M_sun).value*Msun, (0.815*M_earth/M_sun).value*Msun, (95.16*M_earth/M_sun).value*Msun, (14.54*M_earth/M_sun).value*Msun, (17.15*M_earth/M_sun).value*Msun])
-    
     planet_names = ['sun', 'earth', 'jupiter', 'mercury', 'mars', 'venus', 'saturn', 'uranus', 'neptune']
-    planets_to_plot = ['earth', 'mars', 'venus', 'mercury', 'sun']#None
+    planets_to_plot = None
+    
+    m = np.array([masses[planet] for planet in planet_names])
 
     planets = np.array([get_body_barycentric_posvel(planet, t) for planet in planet_names])
 
@@ -119,9 +123,9 @@ if __name__ == '__main__':
         t = np.arange(len(x[planet_names[0]][:,0]))*dt
 
         hdr = ' '.join(np.array([['q'+ str(planet) + coord for coord in ['x','y','z']] for planet in planet_names]).flatten()) + ' t H V T L'
-        np.savetxt('./orbits.txt', np.array([xi for planet in planet_names for xi in x[planet].T] + [t, H, V, T, L]).T, header = hdr)
+        np.savetxt(Path(out_folder, 'orbits.txt'), np.array([xi for planet in planet_names for xi in x[planet].T] + [t, H, V, T, L]).T, header = hdr)
     else:
-        sol = np.genfromtxt('./orbits.txt', names = True)
+        sol = np.genfromtxt(Path(out_folder, 'orbits.txt'), names = True)
         
         t  = sol['t']
         
@@ -140,8 +144,8 @@ if __name__ == '__main__':
     if planets_to_plot == None:
         planets_to_plot = planet_names
 
-    plot_solutions(x, planets_to_plot)
-    plot_hamiltonian(t/(2*365*day), H, V, T)
-    plot_angular_momentum(t/(2*365*day), L)
+    plot_solutions(x, planets_to_plot, out_folder)
+    plot_hamiltonian(t/(2*365*day), H, V, T, out_folder)
+    plot_angular_momentum(t/(2*365*day), L, out_folder)
         
         
