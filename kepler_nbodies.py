@@ -71,7 +71,7 @@ def hamiltonian(q, p, m, PN):
 
 @jit
 def potential_1pn(m1, m2, p1_2, r, p1dp2, ndp1, ndp2):
-    return -(1/8)*(p1_2**2)/(m1**3) + (1/8)*(G*m1*m2/r)*(-12*p1_2/(m1**2) + 14*p1dp2/(m1*m2) + 2*(ndp1*ndp2)/(m1*m2)) + (1/4)*(G*m1*m2/r)*(G*(m1+m2)/r)
+    return -(1./8.)*(p1_2**2)/(m1**3) + (1./8.)*(G*m1*m2/r)*(-12*p1_2/(m1**2) + 14*p1dp2/(m1*m2) + 2*(ndp1*ndp2)/(m1*m2)) + (1./4.)*(G*m1*m2/r)*(G*(m1+m2)/r)
 
 @jit
 def gradient(q, p, m, PN):
