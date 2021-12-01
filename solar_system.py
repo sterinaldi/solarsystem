@@ -91,7 +91,7 @@ if __name__ == '__main__':
     m = np.array([1*Msun, (M_earth/M_sun).value*Msun, (M_jup/M_sun).value*Msun, (0.055*M_earth/M_sun).value*Msun, (0.107*M_earth/M_sun).value*Msun, (0.815*M_earth/M_sun).value*Msun, (95.16*M_earth/M_sun).value*Msun, (14.54*M_earth/M_sun).value*Msun, (17.15*M_earth/M_sun).value*Msun])
     
     planet_names = ['sun', 'earth', 'jupiter', 'mercury', 'mars', 'venus', 'saturn', 'uranus', 'neptune']
-    planets_to_plot = None
+    planets_to_plot = ['earth', 'mars', 'venus', 'mercury', 'sun']#None
 
     planets = np.array([get_body_barycentric_posvel(planet, t) for planet in planet_names])
 
@@ -133,8 +133,9 @@ if __name__ == '__main__':
         L  = sol['L']
 
     if opts.geocentric:
+        earth_pos = np.copy(x['earth'])
         for planet in planet_names:
-            x[planet] -= x['earth']
+            x[planet] -= earth_pos
     
     if planets_to_plot == None:
         planets_to_plot = planet_names
