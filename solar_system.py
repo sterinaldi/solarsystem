@@ -104,7 +104,7 @@ if __name__ == '__main__':
     v0 = np.concatenate([np.array([float(planet[1].x.value*AU/day), float(planet[1].y.value*AU/day), float(planet[1].z.value*AU/day)]) for planet in planets])
 
     if opts.cm:
-        v_cm = np.sum([v0[3*i:3*(i+1)]*m[i] for i in range(len(m))])/np.sum(m)
+        v_cm = np.sum([v0[3*i:3*(i+1)]*m[i] for i in range(len(m))], axis = 0)/np.sum(m)
         for i in range(len(m)):
             v0[3*i:3*(i+1)] -= v_cm
         
