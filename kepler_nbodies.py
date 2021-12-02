@@ -103,11 +103,11 @@ def gradient(q, p, m, PN):
 
 @jit
 def gradient_1pn_q(m1, m2, dr, r, r2, p1, p2, q1, q2):
-     return 0.25*G**2*m1*m2*(m1 + m2)*2*(q2-q1)/(r2)**2 + 0.125*G*m1*m2*(q2-q1)*((14*np.dot(p1,p2))/(m1*m2) + 2*(np.dot(dr,p1))*(np.dot(dr,p2))/(m1*m2*r2 + (-12*np.sum(p1**2)))/m1**2)/(r**3) + 0.125*G*m1*m2*(2*p1*(np.dot(p2,dr))/(m1*m2*r2) + 2*p2*(np.dot(p1,dr))/(m1*m2*r2) + 4*(q2-q1)*(np.dot(p1,dr))*(np.dot(p2,dr))/(m1*m2*r2**2))/r
+     return 0.25*G**2*m1*m2*(m1 + m2)*2*(q2-q1)/(r2)**2 + 0.125*G*m1*m2*(q2-q1)*(14*np.dot(p1,p2)/(m1*m2) + 2*(np.dot(dr,p1))*(np.dot(dr,p2))/(m1*m2*r2 + (-12*np.sum(p1**2)))/m1**2)/(r**3) + 0.125*G*m1*m2*(2*p1*(np.dot(p2,dr))/(m1*m2*r2) + 2*p2*(np.dot(p1,dr))/(m1*m2*r2) + 4*(q2-q1)*(np.dot(p1,dr))*(np.dot(p2,dr))/(m1*m2*r2**2))/r
     
 @jit
 def gradient_1pn_p(m1, m2, dr, p1, p2, r):
-    return 0.125*G*m1*m2*(14*p2/(m1*m2) + 2*dr*(np.dot(dr, p2))/(m1*m2*r) - 24*p1/m1**2)/r - 0.5*p1*(np.sum(p1**2))/m1**3
+    return 0.125*G*m1*m2*(14*p2/(m1*m2) + 2*dr*(np.dot(dr, p2))/(m1*m2*r**2) - 24*p1/m1**2)/r - 0.5*p1*(np.sum(p1**2))/m1**3
 
 @jit
 def one_step(q, p, dt, m, cn_order, PN_order):
@@ -225,10 +225,10 @@ if __name__ == '__main__':
     v0 = np.concatenate([np.array([float(planet[1].x.value*AU/day), float(planet[1].y.value*AU/day), float(planet[1].z.value*AU/day)]) for planet in planets])
     
     if opts.cm:
-        v_cm = np.sum([v0[3*i:3*(i+1)]*m[i] for i in range(len(m))])/np.sum(m)
+        v_cm = np.sum([v0[3*i:3*(i+1)]*m[i] for i in range(len(m))], axis = 0)/np.sum(m)
         for i in range(len(m)):
             v0[3*i:3*(i+1)] -= v_cm
-        
+    
     p0 = np.concatenate([v0[3*i:3*(i+1)]*m[i] for i in range(len(m))])
 
     # Integrator setting
