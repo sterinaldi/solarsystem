@@ -3,6 +3,8 @@ Msun = 2e30   # kg
 AU = 1.5e11   # m
 day = 86400   # s
 Mearth = 6e24 # kg
+c = 3e8       # m s^-2
+c2 = c*c
 
 # Solar system masses
 masses = {
