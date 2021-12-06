@@ -7,7 +7,7 @@ from datetime import datetime
 from astropy.time import Time
 from astropy.coordinates import get_body_barycentric_posvel
 
-from solarsystem.kepler_nbodies import run
+from solarsystem.dynamics import run
 
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
