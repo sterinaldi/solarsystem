@@ -15,7 +15,7 @@ from mpl_toolkits import mplot3d
 from matplotlib import rcParams
 from distutils.spawn import find_executable
 
-from constants import G, Msun, AU, day, masses
+from solarsystem.constants import G, Msun, AU, day, masses
 
 if find_executable('latex'):
     rcParams["text.usetex"] = True
@@ -84,6 +84,7 @@ if __name__ == '__main__':
     parser.add_option('--dt', default = 10, type = 'int', help = "Number of seconds for each dt")
     parser.add_option('-p', dest = "postprocessing", default = False, action = 'store_true', help = "Postprocessing")
     parser.add_option('--geo', dest = "geocentric", default = False, action = 'store_true', help = "Make plots in geocentric reference frame")
+    parser.add_option('--PN', dest = "PN", default = 0, type = 'int', help = "Post-Newtonian order")
 
     (opts,args) = parser.parse_args()
     out_folder  = Path(opts.outfolder).absolute()
@@ -118,7 +119,7 @@ if __name__ == '__main__':
     order = int(opts.cn_order)
 
     if not opts.postprocessing:
-        s, H, V, T, L = run(nsteps, dt, q0, p0, m, order)
+        s, H, V, T, L = run(nsteps, dt, q0, p0, m, order, opts.PN)
         x = {planet: np.array([si[3*i:3*(i+1)] for si in s]) for i, planet in enumerate(planet_names)}
         t = np.arange(len(x[planet_names[0]][:,0]))*dt
 
