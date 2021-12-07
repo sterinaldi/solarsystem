@@ -1,9 +1,9 @@
-G = 6.67e-11  # m^3 kg^-1 s^-2
-Msun = 2e30   # kg
-AU = 1.5e11   # m
-day = 86400   # s
-Mearth = 6e24 # kg
-c = 3e8       # m s^-2
+G = 6.67e-11       # m^3 kg^-1 s^-2
+Msun = 1.988e30    # kg
+AU = 149597870700. # m
+day = 86400        # s
+Mearth = 5.972e24  # kg
+c = 299792458.     # m s^-2
 c2 = c*c
 
 # Solar system masses
