@@ -1,3 +1,5 @@
+import numpy as np
+
 # Fundamental constants
 G = 6.67e-11       # m^3 kg^-1 s^-2
 Msun = 1.988e30    # kg
