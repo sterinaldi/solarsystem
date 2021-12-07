@@ -1,10 +1,15 @@
+# Fundamental constants
 G = 6.67e-11       # m^3 kg^-1 s^-2
 Msun = 1.988e30    # kg
 AU = 149597870700. # m
 day = 86400        # s
 Mearth = 5.972e24  # kg
 c = 299792458.     # m s^-2
+
+# Useful quantities
 c2 = c*c
+arcsec = 2*np.pi/(360*3600)
+mercury_precession_GR = 42.9799 # arcsec/century
 
 # Solar system masses
 masses = {
