@@ -8,6 +8,7 @@ from astropy.time import Time
 from astropy.coordinates import get_body_barycentric_posvel
 
 from solarsystem.dynamics import run
+from solarsystem.kepler import periapsis_precession
 from solarsystem.constants import *
 from solarsystem.postprocessing import *
 
@@ -58,6 +59,9 @@ if not opts.postprocessing:
     
 t, x_q, x_p, H, V, T, L = load_solution(out_folder, planet_names)
 
+omega = periapsis_precession(x_q['mercury'], x_p['mercury'], m['mercury'])
+
 plot_solutions(x_q, planet_names, out_folder)
 plot_hamiltonian(t, H, V, T, out_folder)
 plot_angular_momentum(t, L, out_folder)
+plot_precession(t, omega, out_folder)
