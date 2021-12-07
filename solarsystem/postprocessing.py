@@ -66,6 +66,21 @@ def plot_angular_momentum(t, L, folder):
     ax.grid(True,dashes=(1,3))
     
     fig.savefig(Path(folder, 'angular_momentum.pdf'), bbox_inches = 'tight')
+    
+def plot_precession(t, omega, folder):
+    
+    fig, ax = plt.subplots()
+    
+    ax.plot(t/365*day, omega[0] - t*mercury_precession_GR*arcsec/100, lw = 0.5, ls = '--', color = 'k', label = 'Expected')
+    ax.plot(t/(365*day), omega, lw = 0.5, label = 'Reconstruced')
+
+        
+    ax.set_ylabel('$\\omega(t)$')
+    ax.set_xlabel('$t\ [yr]$')
+    ax.grid(True,dashes=(1,3))
+    ax.legend(loc=0,frameon=False,fontsize=10)
+    
+    fig.savefig(Path(folder, 'perihelion_precession.pdf'), bbox_inches = 'tight')
 
 def save_solution(q, p, H, V, T, L, planet_names, folder, dt):
 
