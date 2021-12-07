@@ -53,7 +53,7 @@ cn_order = int(opts.cn_order)
 PN_order = opts.PN
 
 if not opts.postprocessing:
-    s_q, s_p, H, V, T, L = run(nsteps, dt, q0, p0, m, order, opts.PN)
+    s_q, s_p, H, V, T, L = run(nsteps, dt, q0, p0, m, cn_order, PN_order)
     save_solution(s_q, s_p, H, V, T, L, planet_names, out_folder, dt)
     
 t, x_q, x_p, H, V, T, L = load_solution(out_folder, planet_names)
