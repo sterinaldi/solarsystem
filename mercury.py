@@ -59,9 +59,17 @@ if not opts.postprocessing:
     
 t, x_q, x_p, H, V, T, L = load_solution(out_folder, planet_names)
 
-omega = periapsis_precession(x_q['mercury'], x_p['mercury'], m['mercury'])
+if opts.heliocentric:
+    sun_pos = np.copy(x_q['sun'])
+    sun_vel = np.copy(x_p['sun']/masses['sun'])
+    for planet in planet_names:
+        x_q[planet] -= sun_pos
+        x_p[planet] = (x_p[planet]/masses[planet] - sun_vel)*masses[planet]
+
+omega = periapsis_precession(x_q['mercury'], x_p['mercury'], masses['mercury'], masses['sun'])
 
 plot_solutions(x_q, planet_names, out_folder)
 plot_hamiltonian(t, H, V, T, out_folder)
 plot_angular_momentum(t, L, out_folder)
 plot_precession(t, omega, out_folder)
+plot_lenz_vector(x_q['mercury'], x_p['mercury'], masses['mercury'], masses['sun'], out_folder)
