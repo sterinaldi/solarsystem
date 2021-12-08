@@ -11,7 +11,7 @@ c = 299792458.     # m s^-2
 # Useful quantities
 c2 = c*c
 arcsec = 2*np.pi/(360*3600)
-mercury_precession_GR = 42.9799 # arcsec/century
+mercury_precession_GR = 42.9799*arcsec # arcsec/century
 
 # Solar system masses
 masses = {
