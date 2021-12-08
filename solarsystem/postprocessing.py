@@ -1,6 +1,7 @@
 import numpy as np
 
 from solarsystem.constants import *
+from solarsystem.kepler import lenz_vector
 
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
@@ -70,17 +71,25 @@ def plot_angular_momentum(t, L, folder):
 def plot_precession(t, omega, folder):
     
     fig, ax = plt.subplots()
-    
-    ax.plot(t/365*day, omega[0] - t*mercury_precession_GR*arcsec/100, lw = 0.5, ls = '--', color = 'k', label = 'Expected')
+    print(omega[0])
+    ax.plot(t/(365*day), omega[0] + (t/(365*day))*mercury_precession_GR/100, lw = 0.5, ls = '--', color = 'k', label = 'Expected')
     ax.plot(t/(365*day), omega, lw = 0.5, label = 'Reconstruced')
 
         
-    ax.set_ylabel('$\\omega(t)$')
+    ax.set_ylabel('$\\omega(t) - \\omega(0)\ [arcsec]$')
     ax.set_xlabel('$t\ [yr]$')
     ax.grid(True,dashes=(1,3))
     ax.legend(loc=0,frameon=False,fontsize=10)
     
     fig.savefig(Path(folder, 'perihelion_precession.pdf'), bbox_inches = 'tight')
+
+def plot_lenz_vector(q, p, m1, m2, folder):
+    f = plt.figure(figsize=(6,4))
+    ax = f.add_subplot(111, projection = '3d')
+    A = lenz_vector(q, p, m1, m2)
+    ax.plot(A[:,0], A[:,1], A[:,2], lw=0.5)
+    f.savefig(Path(folder,'lenz.pdf'), bbox_inches = 'tight')
+    
 
 def save_solution(q, p, H, V, T, L, planet_names, folder, dt):
 
@@ -99,8 +108,8 @@ def load_solution(folder, planet_names):
 
     t  = sol['t']
     
-    x_q = {planet:np.array([sol['q_' + str(planet) + '_x'], sol['q_' + str(planet) + '_y'], sol['q_' + str(planet) + '_z']]).T for planet in planet_names}
-    x_p = {planet:np.array([sol['p_' + str(planet) + '_x'], sol['p_' + str(planet) + '_y'], sol['p_' + str(planet) + '_z']]).T for planet in planet_names}
+    x_q = {planet:np.ascontiguousarray(np.array([sol['q_' + str(planet) + '_x'], sol['q_' + str(planet) + '_y'], sol['q_' + str(planet) + '_z']]).T) for planet in planet_names}
+    x_p = {planet:np.ascontiguousarray(np.array([sol['p_' + str(planet) + '_x'], sol['p_' + str(planet) + '_y'], sol['p_' + str(planet) + '_z']]).T) for planet in planet_names}
     
     H  = sol['H']
     V  = sol['V']
