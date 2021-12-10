@@ -72,7 +72,7 @@ def plot_precession(t, omega, folder):
     
     fig, ax = plt.subplots()
     ax.plot(t/(365*day), omega, lw = 0.5, label = '$Reconstructed$')
-    ax.plot(t/(365*day), (t/(365*day))*mercury_precession_GR/100., lw = 0.5, ls = '--', color = 'r', label = '$Expected$')
+    ax.plot(t/(365*day), (t/(365*day))*mercury_precession_GR, lw = 0.5, ls = '--', color = 'r', label = '$Expected$')
 
 
         
@@ -83,7 +83,7 @@ def plot_precession(t, omega, folder):
     
     fig.savefig(Path(folder, 'perihelion_precession.pdf'), bbox_inches = 'tight')
 
-def plot_eccentricity_vector(q, p, m1, m2, folder):
+def plot_eccentricity_vector(t, q, p, m1, m2, folder):
     f = plt.figure(figsize=(10,7))
     ax = f.add_subplot(111, projection = '3d')
     E = np.array([eccentricity_vector(qi, pi/m1, m1, m2) for qi, pi in zip(q,p)])
@@ -97,7 +97,20 @@ def plot_eccentricity_vector(q, p, m1, m2, folder):
     ###########
     ax.plot(E[:,0], E[:,1], E[:,2], lw=0.5)
     f.tight_layout()
-    f.savefig(Path(folder,'eccentricity.pdf'), bbox_inches = 'tight')
+    f.savefig(Path(folder,'eccentricity_3d.pdf'), bbox_inches = 'tight')
+    
+    f, axes = plt.subplots(3, 1, sharex = True)
+    f.subplots_adjust(hspace=.0)
+    
+    lab = ['$e_x$', '$e_y$', '$e_z$']
+    
+    for comp, ax in enumerate(axes):
+        ax.plot(t/(365*day), E[:,comp], lw = 0.5)
+        ax.set_ylabel(lab[comp])
+        ax.grid(True,dashes=(1,3))
+    
+    axes[-1].set_xlabel('$t\ [yr]$')
+    f.savefig(Path(folder,'eccentricity_components.pdf'), bbox_inches = 'tight')
     
 
 def save_solution(q, p, H, V, T, L, planet_names, folder, dt):
