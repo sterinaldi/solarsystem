@@ -1,7 +1,7 @@
 import numpy as np
 
 from solarsystem.constants import *
-from solarsystem.kepler import lenz_vector
+from solarsystem.kepler import eccentricity_vector
 
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
@@ -71,9 +71,9 @@ def plot_angular_momentum(t, L, folder):
 def plot_precession(t, omega, folder):
     
     fig, ax = plt.subplots()
-    print(omega[0])
-    ax.plot(t/(365*day), omega[0] + (t/(365*day))*mercury_precession_GR/100, lw = 0.5, ls = '--', color = 'k', label = 'Expected')
-    ax.plot(t/(365*day), omega, lw = 0.5, label = 'Reconstruced')
+    ax.plot(t/(365*day), omega, lw = 0.5, label = '$Reconstructed$')
+    ax.plot(t/(365*day), (t/(365*day))*mercury_precession_GR/100., lw = 0.5, ls = '--', color = 'r', label = '$Expected$')
+
 
         
     ax.set_ylabel('$\\omega(t) - \\omega(0)\ [arcsec]$')
@@ -83,12 +83,21 @@ def plot_precession(t, omega, folder):
     
     fig.savefig(Path(folder, 'perihelion_precession.pdf'), bbox_inches = 'tight')
 
-def plot_lenz_vector(q, p, m1, m2, folder):
-    f = plt.figure(figsize=(6,4))
+def plot_eccentricity_vector(q, p, m1, m2, folder):
+    f = plt.figure(figsize=(10,7))
     ax = f.add_subplot(111, projection = '3d')
-    A = lenz_vector(q, p, m1, m2)
-    ax.plot(A[:,0], A[:,1], A[:,2], lw=0.5)
-    f.savefig(Path(folder,'lenz.pdf'), bbox_inches = 'tight')
+    E = np.array([eccentricity_vector(qi, pi/m1, m1, m2) for qi, pi in zip(q,p)])
+    ###########
+    # To be removed
+    E_modules = np.linalg.norm(E, axis = 1)
+    ecc_mean = E_modules.mean()
+    ecc_std  = E_modules.std()
+    print('Mercury eccentricity: {0} +- {1}, expected {2}'.format(ecc_mean, ecc_std, mercury_eccentricity))
+    print('Initial eccentricity: {0}'.format(E_modules[0]))
+    ###########
+    ax.plot(E[:,0], E[:,1], E[:,2], lw=0.5)
+    f.tight_layout()
+    f.savefig(Path(folder,'eccentricity.pdf'), bbox_inches = 'tight')
     
 
 def save_solution(q, p, H, V, T, L, planet_names, folder, dt):
