@@ -21,6 +21,7 @@ parser.add_option('--dt', default = 10, type = 'float', help = "Number of second
 parser.add_option('-p', dest = "postprocessing", default = False, action = 'store_true', help = "Postprocessing")
 parser.add_option('--helios', dest = "heliocentric", default = False, action = 'store_true', help = "Make plots in heliocentric reference frame")
 parser.add_option('--PN', dest = "PN", default = 0, type = 'int', help = "Post-Newtonian order")
+parser.add_option('--dsp', dest = "dsp", default = 1, type = 'int', help = "Interval between saved steps. Default is 1 (all steps)")
 (opts,args) = parser.parse_args()
 
 out_folder  = Path(opts.outfolder).absolute()
@@ -54,8 +55,8 @@ cn_order = int(opts.cn_order)
 PN_order = opts.PN
 
 if not opts.postprocessing:
-    s_q, s_p, H, V, T, L = run(nsteps, dt, q0, p0, m, cn_order, PN_order)
-    save_solution(s_q, s_p, H, V, T, L, planet_names, out_folder, dt)
+    s_q, s_p, H, V, T, L = run(nsteps, dt, q0, p0, m, cn_order, PN_order, opts.dsp)
+    save_solution(s_q, s_p, H, V, T, L, planet_names, out_folder, dt, opts.dsp)
     
 t, x_q, x_p, H, V, T, L = load_solution(out_folder, planet_names)
 
