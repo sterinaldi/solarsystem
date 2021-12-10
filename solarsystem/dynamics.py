@@ -98,17 +98,17 @@ def one_step(q, p, dt, m, cn_order, PN_order):
 
     return new_q, new_p
 
-def run(nsteps, dt, q0, p0, m, cn_order, PN_order):
+def run(nsteps, dt, q0, p0, m, cn_order, PN_order, dsp = 1):
     
     q = q0
     p = p0
     
-    solution_q = np.empty(nsteps, dtype = np.ndarray)
-    solution_p = np.empty(nsteps, dtype = np.ndarray)
-    H          = np.empty(nsteps, dtype = np.ndarray)
-    V          = np.empty(nsteps, dtype = np.ndarray)
-    T          = np.empty(nsteps, dtype = np.ndarray)
-    L          = np.empty(nsteps, dtype = np.ndarray)
+    solution_q = np.empty(nsteps//dsp, dtype = np.ndarray)
+    solution_p = np.empty(nsteps//dsp, dtype = np.ndarray)
+    H          = np.empty(nsteps//dsp, dtype = np.ndarray)
+    V          = np.empty(nsteps//dsp, dtype = np.ndarray)
+    T          = np.empty(nsteps//dsp, dtype = np.ndarray)
+    L          = np.empty(nsteps//dsp, dtype = np.ndarray)
     
     solution_q[0]    = q
     solution_p[0]    = p
@@ -117,10 +117,11 @@ def run(nsteps, dt, q0, p0, m, cn_order, PN_order):
     
     for i in tqdm(range(1,nsteps)):
         q, p             = one_step(q, p, dt, m, cn_order, PN_order)
-        solution_q[i]    = q
-        solution_p[i]    = p
-        L[i]             = angular_momentum(q, p)
-        H[i], V[i], T[i] = hamiltonian(q, p, m, PN_order)
+        if i%dsp == 0:
+            solution_q[i//dsp]    = q
+            solution_p[i//dsp]    = p
+            L[i//dsp]             = angular_momentum(q, p)
+            H[i//dsp], V[i//dsp], T[i//dsp] = hamiltonian(q, p, m, PN_order)
     
     return solution_q, solution_p, H, V, T, L
 

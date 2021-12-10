@@ -113,12 +113,12 @@ def plot_eccentricity_vector(t, q, p, m1, m2, folder):
     f.savefig(Path(folder,'eccentricity_components.pdf'), bbox_inches = 'tight')
     
 
-def save_solution(q, p, H, V, T, L, planet_names, folder, dt):
+def save_solution(q, p, H, V, T, L, planet_names, folder, dt, dsp):
 
     x_q = {planet: np.array([si[3*i:3*(i+1)] for si in q]) for i, planet in enumerate(planet_names)}
     x_p = {planet: np.array([si[3*i:3*(i+1)] for si in p]) for i, planet in enumerate(planet_names)}
 
-    t = np.arange(len(x_q[planet_names[0]][:,0]))*float(dt)
+    t = np.arange(len(x_q[planet_names[0]][:,0]))*float(dt*dsp)
 
     hdr = ' '.join(np.array([['q_'+ str(planet) + coord for coord in ['_x','_y','_z']] for planet in planet_names]).flatten()) + ' ' + ' '.join(np.array([['p_'+ str(planet) + coord for coord in ['_x','_y','_z']] for planet in planet_names]).flatten()) + ' t H V T L'
 
