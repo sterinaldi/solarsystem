@@ -1,29 +1,31 @@
 import numpy as np
 
 # Fundamental constants
-G = 6.67e-11       # m^3 kg^-1 s^-2
-Msun = 1.988e30    # kg
-AU = 149597870700. # m
-day = 86400        # s
-Mearth = 5.972e24  # kg
-c = 299792458.     # m s^-2
+G = 6.67e-11        # m^3 kg^-1 s^-2
+Msun = 1.988e30     # kg
+Mearth = 5.9722e24  # kg
+Mjup = 1.8981e27    # kg
+AU = 149597870700.  # m
+day = 86400         # s
+c = 299792458.      # m s^-2
 
 # Useful quantities
 c2 = c*c
 arcsec = 2*np.pi/(360*3600)
 mercury_precession_GR = 42.9799*arcsec # arcsec/century
+mercury_eccentricity = 0.20563069
 
-# Solar system masses
+# Solar system masses [kg] - from https://solarsystem.nasa.gov/planet-compare/
 masses = {
     'sun'     : Msun,
     'earth'   : Mearth,
-    'moon'    : 0.0123*Mearth,
-    'mercury' : 0.0553*Mearth,
-    'mars'    : 0.1075*Mearth,
-    'venus'   : 0.815*Mearth,
-    'jupiter' : 317.8*Mearth,
-    'saturn'  : 95.2*Mearth,
-    'uranus'  : 14.6*Mearth,
-    'neptune' : 17.2*Mearth,
-    'pluto'   : 0.00218*Mearth,
+    'moon'    : 7.3476e22,
+    'mercury' : 3.3010e23,
+    'venus'   : 4.8673e24,
+    'mars'    : 6.4169e23,
+    'jupiter' : Mjup,
+    'saturn'  : 5.68232e26,
+    'uranus'  : 8.6810e25,
+    'neptune' : 1.0241e26,
+    'pluto'   : 1.303e22,
 }
