@@ -12,7 +12,7 @@ c = 299792458.      # m s^-2
 # Useful quantities
 c2 = c*c
 arcsec = 2*np.pi/(360*3600)
-mercury_precession_GR = 42.9799*arcsec/100. # arcsec/century
+mercury_precession_GR = 42.9799/100. # arcsec/century
 mercury_eccentricity = 0.20563069
 
 # Solar system masses [kg] - from https://solarsystem.nasa.gov/planet-compare/
