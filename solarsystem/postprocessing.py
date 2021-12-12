@@ -71,12 +71,12 @@ def plot_angular_momentum(t, L, folder):
 def plot_precession(t, omega, folder):
     
     fig, ax = plt.subplots()
-    ax.plot(t/(365*day), omega, lw = 0.5, label = '$Reconstructed$')
+    ax.plot(t/(365*day), omega*arcsec, lw = 0.5, label = '$Reconstructed$')
     ax.plot(t/(365*day), (t/(365*day))*mercury_precession_GR, lw = 0.5, ls = '--', color = 'r', label = '$Expected$')
 
 
         
-    ax.set_ylabel('$\\omega(t) - \\omega(0)\ [arcsec]$')
+    ax.set_ylabel('$|\\omega(t) - \\omega(0)|\ [arcsec]$')
     ax.set_xlabel('$t\ [yr]$')
     ax.grid(True,dashes=(1,3))
     ax.legend(loc=0,frameon=False,fontsize=10)
@@ -99,17 +99,21 @@ def plot_eccentricity_vector(t, q, p, m1, m2, folder):
     f.tight_layout()
     f.savefig(Path(folder,'eccentricity_3d.pdf'), bbox_inches = 'tight')
     
-    f, axes = plt.subplots(3, 1, sharex = True)
+    f, axes = plt.subplots(4, 1, sharex = True, figsize = (10,6))
     f.subplots_adjust(hspace=.0)
     
     lab = ['$e_x$', '$e_y$', '$e_z$']
     
-    for comp, ax in enumerate(axes):
+    for comp, ax in enumerate(axes[:-1]):
         ax.plot(t/(365*day), E[:,comp], lw = 0.5)
         ax.set_ylabel(lab[comp])
         ax.grid(True,dashes=(1,3))
     
+    axes[-1].plot(t/(365*day), E_modules, lw = 0.5)
+    axes[-1].set_ylabel('$|e|$')
+    axes[-1].grid(True, dashes=(1,3))
     axes[-1].set_xlabel('$t\ [yr]$')
+    
     f.savefig(Path(folder,'eccentricity_components.pdf'), bbox_inches = 'tight')
     
 
