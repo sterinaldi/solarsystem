@@ -72,5 +72,5 @@ omega = periapsis_precession(x_q['mercury'], x_p['mercury'], masses['mercury'], 
 plot_solutions(x_q, planet_names, out_folder)
 plot_hamiltonian(t, H, V, T, out_folder)
 plot_angular_momentum(t, L, out_folder)
-plot_precession(t, omega, out_folder)
+plot_precession(t, omega, out_folder, pn = PN_order)
 plot_eccentricity_vector(t, x_q['mercury'], x_p['mercury'], masses['mercury'], masses['sun'], out_folder)

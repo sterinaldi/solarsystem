@@ -68,11 +68,13 @@ def plot_angular_momentum(t, L, folder):
     
     fig.savefig(Path(folder, 'angular_momentum.pdf'), bbox_inches = 'tight')
     
-def plot_precession(t, omega, folder):
-    
+def plot_precession(t, omega, folder, pn = 0):
+    k = 0.
+    if pn:
+        k = 1.
     fig, ax = plt.subplots()
-    ax.plot(t/(365*day), omega*arcsec, lw = 0.5, label = '$Reconstructed$')
-    ax.plot(t/(365*day), (t/(365*day))*mercury_precession_GR, lw = 0.5, ls = '--', color = 'r', label = '$Expected$')
+    ax.plot(t/(365*day), omega/arcsec, lw = 0.5, label = '$Reconstructed$')
+    ax.plot(t/(365*day), k*(t/(365*day))*mercury_precession_GR, lw = 0.5, ls = '--', color = 'r', label = '$Expected$')
 
 
         
