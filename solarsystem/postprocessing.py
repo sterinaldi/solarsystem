@@ -34,6 +34,7 @@ def plot_solutions(solutions, bodies, folder):
         ax.plot(q[:,0]/AU, q[:,1]/AU, q[:,2]/AU, color=c, lw=0.5)
 
     f.savefig(Path(folder,'trajectories.pdf'), bbox_inches = 'tight')
+    return
     
 def plot_hamiltonian(t, H, V, T, folder):
 
@@ -55,6 +56,7 @@ def plot_hamiltonian(t, H, V, T, folder):
     e.legend(loc=0,frameon=False,fontsize=10)
     
     fig.savefig(Path(folder, 'hamiltonian.pdf'), bbox_inches = 'tight')
+    return
 
 def plot_angular_momentum(t, L, folder):
     
@@ -67,6 +69,7 @@ def plot_angular_momentum(t, L, folder):
     ax.grid(True,dashes=(1,3))
     
     fig.savefig(Path(folder, 'angular_momentum.pdf'), bbox_inches = 'tight')
+    return
     
 def plot_precession(t, omega, folder, pn = 0):
     k = 0.
@@ -84,19 +87,12 @@ def plot_precession(t, omega, folder, pn = 0):
     ax.legend(loc=0,frameon=False,fontsize=10)
     
     fig.savefig(Path(folder, 'perihelion_precession.pdf'), bbox_inches = 'tight')
+    return
 
 def plot_eccentricity_vector(t, q, p, m1, m2, folder):
     f = plt.figure(figsize=(10,7))
     ax = f.add_subplot(111, projection = '3d')
     E = np.array([eccentricity_vector(qi, pi/m1, m1, m2) for qi, pi in zip(q,p)])
-    ###########
-    # To be removed
-    E_modules = np.linalg.norm(E, axis = 1)
-    ecc_mean = E_modules.mean()
-    ecc_std  = E_modules.std()
-    print('Mercury eccentricity: {0} +- {1}, expected {2}'.format(ecc_mean, ecc_std, mercury_eccentricity))
-    print('Initial eccentricity: {0}'.format(E_modules[0]))
-    ###########
     ax.plot(E[:,0], E[:,1], E[:,2], lw=0.5)
     f.tight_layout()
     f.savefig(Path(folder,'eccentricity_3d.pdf'), bbox_inches = 'tight')
@@ -117,9 +113,11 @@ def plot_eccentricity_vector(t, q, p, m1, m2, folder):
     axes[-1].set_xlabel('$t\ [yr]$')
     
     f.savefig(Path(folder,'eccentricity_components.pdf'), bbox_inches = 'tight')
+    return
     
 
 def save_solution(q, p, H, V, T, L, planet_names, folder, dt, dsp):
+    print('Saving solution...')
 
     x_q = {planet: np.array([si[3*i:3*(i+1)] for si in q]) for i, planet in enumerate(planet_names)}
     x_p = {planet: np.array([si[3*i:3*(i+1)] for si in p]) for i, planet in enumerate(planet_names)}
@@ -129,9 +127,11 @@ def save_solution(q, p, H, V, T, L, planet_names, folder, dt, dsp):
     hdr = ' '.join(np.array([['q_'+ str(planet) + coord for coord in ['_x','_y','_z']] for planet in planet_names]).flatten()) + ' ' + ' '.join(np.array([['p_'+ str(planet) + coord for coord in ['_x','_y','_z']] for planet in planet_names]).flatten()) + ' t H V T L'
 
     np.savetxt(Path(folder, 'solutions.txt'), np.array([xi for planet in planet_names for xi in x_q[planet].T] + [xi for planet in planet_names for xi in x_p[planet].T] + [t, H, V, T, L]).T, header = hdr)
+    print('Saved!')
+    return
 
 def load_solution(folder, planet_names):
-
+    print('Loading solution...')
     sol = np.genfromtxt(Path(folder, 'solutions.txt'), names = True)
 
     t  = sol['t']
