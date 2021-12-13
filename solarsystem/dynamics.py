@@ -31,8 +31,8 @@ def hamiltonian(q, p, m, PN):
             dr = qi - qj
             r  = np.sqrt(np.sum(dr**2))
             pidpj  = np.dot(pi, pj)
-            ndpi = np.dot(dr, pi)/r
-            ndpj = np.dot(dr, pj)/r
+            ndpi = np.dot(dr, pi)#/r
+            ndpj = np.dot(dr, pj)#/r
             V  += -G*mi*mj/r
             if PN == 1.:
                 V += potential_1pn(mi, mj, pi_2, r, pidpj, ndpi, ndpj)/c2
