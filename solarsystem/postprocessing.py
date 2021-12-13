@@ -93,6 +93,7 @@ def plot_eccentricity_vector(t, q, p, m1, m2, folder):
     f = plt.figure(figsize=(10,7))
     ax = f.add_subplot(111, projection = '3d')
     E = np.array([eccentricity_vector(qi, pi/m1, m1, m2) for qi, pi in zip(q,p)])
+    E_modules = np.linalg.norm(E, axis = 1)
     ax.plot(E[:,0], E[:,1], E[:,2], lw=0.5)
     f.tight_layout()
     f.savefig(Path(folder,'eccentricity_3d.pdf'), bbox_inches = 'tight')
