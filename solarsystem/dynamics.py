@@ -131,3 +131,16 @@ def distance(v1, v2):
     for i, (a,b) in enumerate(zip(v1, v2)):
         d[i] = np.sqrt(np.sum((a-b)**2))
     return d
+
+@jit
+def precession_velocity(major_semiaxis, eccentricity, secondary_mass):
+    '''
+    1PN perihelion precession velocity in arcsec/cty
+    Eq. (1) in https://arxiv.org/pdf/2107.07126.pdf
+    
+    d(perihelion)/dt = 3*nb*mu/(c^2*a*(1-e^2))
+    
+    mu = G*M (secondary body - the Sun)
+    nb = sqrt(mu/a^3)
+    '''
+    return 3*np.sqrt(G*secondary_mass/major_semiaxis)*G*secondary_mass/(c2*major_semiaxis*(1-eccentricity**2))*(day*365*100/arcsec)
