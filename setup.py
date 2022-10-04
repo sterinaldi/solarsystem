@@ -15,45 +15,7 @@ class build_ext(_build_ext):
         # Prevent numpy from thinking it is still in its setup process:
         __builtins__.__NUMPY_SETUP__ = False
         self.include_dirs.append(numpy.get_include())
-
-#ext_modules=[
-#             Extension("solarsystem.constants",
-#                       sources=[os.path.join("solarsystem","constants.py")],
-#                       libraries=["m"], # Unix-like specific
-#                       extra_compile_args=["-O3","-ffast-math"],
-#                       include_dirs=['solarsystem', numpy.get_include()]
-#                       ),
-#             Extension("solarsystem.dynamics",
-#                       sources=[os.path.join("solarsystem","dynamics.py")],
-#                       libraries=["m"], # Unix-like specific
-#                       extra_compile_args=["-O3","-ffast-math"],
-#                       include_dirs=['solarsystem', numpy.get_include()]
-#                       ),
-#             Extension("solarsystem.kepler",
-#                       sources=[os.path.join("solarsystem","kepler.py")],
-#                       libraries=["m"], # Unix-like specific
-#                       extra_compile_args=["-O3","-ffast-math"],
-#                       include_dirs=['solarsystem', numpy.get_include()]
-#                       )
-#             ]
-
-#
-#setup(
-#      name = 'solarsystem/dynamics',
-#      ext_modules = ext_modules,
-#      include_dirs=[numpy.get_include()]
-#      )
-#setup(
-#      name = 'solarsystem/constants',
-#      ext_modules = ext_modules,
-#      include_dirs=[numpy.get_include()]
-#      )
-#setup(
-#      name = 'solarsystem/kepler',
-#      ext_modules = ext_modules,
-#      include_dirs=[numpy.get_include()]
-#      )
-
+        
 setup(
     name = 'solarsystem',
     use_scm_version=True,
@@ -65,6 +27,5 @@ setup(
     packages = ['solarsystem'],
     include_dirs = [numpy.get_include()],
     entry_points = {},
-#    ext_modules=ext_modules,
     )
 
