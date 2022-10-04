@@ -22,6 +22,7 @@ parser.add_option('-p', dest = "postprocessing", default = False, action = 'stor
 parser.add_option('--helios', dest = "heliocentric", default = False, action = 'store_true', help = "Make plots in heliocentric reference frame")
 parser.add_option('--PN', dest = "PN", default = 0, type = 'int', help = "Post-Newtonian order")
 parser.add_option('--dsp', dest = "dsp", default = 1, type = 'int', help = "Interval between saved steps. Default is 1 (all steps)")
+parser.add_option('--ap', dest = "check_astropy", default = False, action = 'store_true', help = "Check against Astropy ephemeris")
 (opts,args) = parser.parse_args()
 
 out_folder  = Path(opts.outfolder).absolute()
@@ -29,6 +30,7 @@ if not out_folder.exists():
     out_folder.mkdir()
 
 t = Time(datetime.now())
+t.format = 'gps'
 
 planet_names = ['sun', 'mercury']
 
@@ -56,7 +58,7 @@ PN_order = opts.PN
 
 if not opts.postprocessing:
     s_q, s_p, H, V, T, L = run(nsteps, dt, q0, p0, m, cn_order, PN_order, opts.dsp)
-    save_solution(s_q, s_p, H, V, T, L, planet_names, out_folder, dt, opts.dsp)
+    save_solution(s_q, s_p, H, V, T, L, planet_names, out_folder, dt, opts.dsp, t.value)
     
 t, x_q, x_p, H, V, T, L = load_solution(out_folder, planet_names)
 
@@ -69,8 +71,10 @@ if opts.heliocentric:
 
 omega = periapsis_precession(x_q['mercury'], x_p['mercury'], masses['mercury'], masses['sun'])
 
-plot_solutions(x_q, planet_names, out_folder)
+plot_solutions(t, x_q, planet_names, out_folder, opts.check_astropy)
 plot_hamiltonian(t, H, V, T, out_folder)
 plot_angular_momentum(t, L, out_folder)
 plot_precession(t, omega, out_folder, pn = PN_order)
 plot_eccentricity_vector(t, x_q['mercury'], x_p['mercury'], masses['mercury'], masses['sun'], out_folder)
+if opts.check_astropy:
+    plot_difference_astropy(t, x_q, x_p, planet_names, out_folder)
