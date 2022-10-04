@@ -36,10 +36,10 @@ def plot_solutions(times, solutions, bodies, folder, check_astropy = False):
 
     for body in bodies:
         q = np.array(solutions[body])
-        ap_q = np.array(astropy_q[body])
         c = next(colors)
         ax.plot(q[:,0]/AU, q[:,1]/AU, q[:,2]/AU, color=c, lw=0.5, alpha = 0.5)
         if check_astropy:
+            ap_q = np.array(astropy_q[body])
             ax.plot(ap_q[:,0]/AU, ap_q[:,1]/AU, ap_q[:,2]/AU, color=c, ls = '--', lw=0.5)
 
     f.savefig(Path(folder,'trajectories.pdf'), bbox_inches = 'tight')
