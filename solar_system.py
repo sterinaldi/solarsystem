@@ -30,6 +30,7 @@ if not out_folder.exists():
     out_folder.mkdir()
 
 t = Time(datetime.now())
+t.format = 'gps'
 
 planet_names = ['sun', 'earth', 'jupiter', 'mercury', 'mars', 'venus', 'saturn', 'uranus', 'neptune']
 planets_to_plot = None
@@ -58,7 +59,7 @@ order = int(opts.cn_order)
 
 if not opts.postprocessing:
     s_q, s_p, H, V, T, L = run(nsteps, dt, q0, p0, m, order, opts.PN, opts.dsp)
-    save_solution(s_q, s_p, H, V, T, L, planet_names, out_folder, dt, opts.dsp)
+    save_solution(s_q, s_p, H, V, T, L, planet_names, out_folder, dt, opts.dsp, t.value)
     
 t, x_q, x_p, H, V, T, L = load_solution(out_folder, planet_names)
 
@@ -66,7 +67,7 @@ if opts.geocentric:
     earth_pos = np.copy(x['earth'])
     for planet in planet_names:
         x[planet] -= earth_pos
-else if opts.heliocentric:
+elif opts.heliocentric:
     sun_pos = np.copy(x['sun'])
     for planet in planet_names:
         x[planet] -= sun_pos
@@ -74,6 +75,7 @@ else if opts.heliocentric:
 if planets_to_plot == None:
     planets_to_plot = planet_names
 
-plot_solutions(x_q, planets_to_plot, out_folder)
+plot_solutions(t, x_q, planets_to_plot, out_folder)
 plot_hamiltonian(t, H, V, T, out_folder)
 plot_angular_momentum(t, L, out_folder)
+plot_difference_astropy(t, x_q, x_p, planet_names, out_folder)
